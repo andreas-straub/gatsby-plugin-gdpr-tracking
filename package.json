@@ -1,10 +1,10 @@
 {
-  "name": "gatsby-plugin-gdpr-analytics",
-  "description": "Gatsby plugin to add analytics services in a gdpr form.",
+  "name": "gatsby-plugin-gdpr-tracking",
+  "description": "Gatsby plugin to add analytics and tracking services in a gdpr form.",
   "version": "0.0.1",
   "author": "Andreas Straub",
   "bugs": {
-    "url": "https://github.com/andreas-straub/gatsby-plugin-gdpr-analytics/issues"
+    "url": "https://github.com/andreas-straub/gatsby-plugin-gdpr-tracking/issues"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.4",
@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/andreas-straub/gatsby-plugin-gdpr-analytics.git"
+    "url": "https://github.com/andreas-straub/gatsby-plugin-gdpr-tracking.git"
   },
   "scripts": {
     "build": "babel src --out-dir . --ignore **/__tests__",

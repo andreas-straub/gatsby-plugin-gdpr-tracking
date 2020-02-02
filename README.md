@@ -1,9 +1,9 @@
-# gatsby-plugin-gdpr-analytics
+# gatsby-plugin-gdpr-tracking
 Gatsby plugin to add analytics services like Google Analytics, Hotjar or Google Ads GDPR compliant.
 
 ## Install
 
-`npm install --save gatsby-plugin-gdpr-analytics`
+`npm install --save gatsby-plugin-gdpr-tracking`
 
 ## How to use
 
@@ -12,7 +12,7 @@ Gatsby plugin to add analytics services like Google Analytics, Hotjar or Google 
 module.exports = {
   plugins: [
     {
-      resolve: `gatsby-plugin-gdpr-analytics`,
+      resolve: `gatsby-plugin-gdpr-tracking`,
       options: {
         googleAnalytics: { 
             // The property ID; the tracking code won't be generated without it.
@@ -48,7 +48,7 @@ You can use this plugin in development mode, if you set the plugin option `enabl
 
 ## How it works
 By default this plugin starts google analytics without cookies and with a generated clientId to make it GDPR compliant. Google Analytics will be started on `onClientEntry`.
-As soon as the user accepts your cookie policy, you can set the cookie `gatsby-plugin-gdpr-analytics_cookies-enabled`.
+As soon as the user accepts your cookie policy, you can set the cookie `gatsby-plugin-gdpr-tracking_cookies-enabled`.
 Depending on the user input the value should be `true` or `false`. 
 If the cookie is set to true, Google Analytics will be restarted with enabled cookies. 
 If the cookie is set to false, Google Analytics will continue without cookies.

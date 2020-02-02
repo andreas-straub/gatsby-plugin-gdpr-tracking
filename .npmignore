@@ -33,3 +33,7 @@ flow-typed
 coverage
 decls
 examples
+
+# IDE
+.idea
+*.iml

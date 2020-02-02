@@ -23,7 +23,7 @@ export const onRenderBody = (
   return setComponents([
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalytics.trackingId}`}/>,
     <script
-      key={`gatsby-plugin-gdpr-analytics`}
+      key={`gatsby-plugin-gdpr-tracking`}
       dangerouslySetInnerHTML={{
         __html: `
         ${
