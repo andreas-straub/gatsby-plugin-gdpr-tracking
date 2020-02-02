@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# IDE
+.idea
+*.iml
+
+# build artifacts
+gatsby-browser.js
+gatsby-node.js
+gatsby-ssr.js
