@@ -19,8 +19,8 @@ const defaultOptions = {
 export const onClientEntry = (_, {hotjar}) => {
   const hotjarOpt = {...defaultOptions.hotjar, ...hotjar};
 
-  if (typeof window.loadHotjar === `function` && Cookies.get(hotjarOpt.controlCookieName) === "true") {
-    loadHotjar();
+  if (typeof window.trackHotjar === `function` && Cookies.get(hotjarOpt.controlCookieName) === "true") {
+    trackHotjar();
   }
 };
 
@@ -42,11 +42,18 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
 
     // - Google Ads pixel
     // check if the marketing cookie exists
-    if (Cookies.get(googleAdsOpt.controlCookieName) === "true" && googleAdsOpt.trackingId) {
-      gtag('config', googleAdsOpt.trackingId, {
-        'anonymize_ip': googleAdsOpt.anonymize.toString(),
-        'page_path': location.pathname
-      });
-    }
+    window.trackGoogleAds = () => {
+      if (Cookies.get(googleAdsOpt.controlCookieName) === "true" && googleAdsOpt.trackingId) {
+
+        console.log("trackGoogleAds", googleAdsOpt.trackingId);
+        gtag('config', googleAdsOpt.trackingId, {
+          'anonymize_ip': googleAdsOpt.anonymize.toString(),
+          'page_path': location.pathname
+        });
+      }
+    };
+    window.trackGoogleAds();
+
   }
+
 };

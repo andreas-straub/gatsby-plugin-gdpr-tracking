@@ -51,7 +51,8 @@ export const onRenderBody = (
         dangerouslySetInnerHTML={{
           __html: `
               var hjLoaded = false;
-              function loadHotjar() {
+              function trackHotjar() {
+                console.log("trackHotjar", ${hotjar.trackingId})
                 if (!hjLoaded) {
                   (function(h,o,t,j,a,r){
                       h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
