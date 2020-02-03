@@ -1,7 +1,7 @@
 {
   "name": "gatsby-plugin-gdpr-tracking",
   "description": "Gatsby plugin to add analytics and tracking services in a gdpr form.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Andreas Straub",
   "bugs": {
     "url": "https://github.com/andreas-straub/gatsby-plugin-gdpr-tracking/issues"

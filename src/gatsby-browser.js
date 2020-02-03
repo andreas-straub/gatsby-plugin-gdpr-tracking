@@ -44,16 +44,20 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
     // check if the marketing cookie exists
     window.trackGoogleAds = () => {
       if (Cookies.get(googleAdsOpt.controlCookieName) === "true" && googleAdsOpt.trackingId) {
-
-        console.log("trackGoogleAds", googleAdsOpt.trackingId);
         gtag('config', googleAdsOpt.trackingId, {
           'anonymize_ip': googleAdsOpt.anonymize.toString(),
           'page_path': location.pathname
         });
       }
     };
-    window.trackGoogleAds();
 
+    window.trackGoogleAdsEvent = (category, params) => {
+      if (Cookies.get(googleAdsOpt.controlCookieName) === "true" && googleAdsOpt.trackingId) {
+        gtag('event', category, params);
+      }
+    };
+
+    window.trackGoogleAds();
   }
 
 };
