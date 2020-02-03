@@ -1,7 +1,7 @@
 import React from "react"
 
 export const onRenderBody = (
-  {setHeadComponents, setPostBodyComponents}, { googleAnalytics = { anonymize: true }, environments = ['production'] }
+  {setHeadComponents, setPostBodyComponents}, { googleAnalytics = {}, environments = ['production'], hotjar }
 ) => {
   const currentEnvironment = process.env.ENV || process.env.NODE_ENV || "development";
 
@@ -16,11 +16,16 @@ export const onRenderBody = (
       key="preconnect-googletagmanager"
       href="https://www.googletagmanager.com"
     />,
+    <link
+      rel="preconnect dns-prefetch"
+      key="preconnect-google-analytics"
+      href="https://www.google-analytics.com"
+    />,
   ])
 
   const anonymize = typeof googleAnalytics.anonymize !== `undefined` && googleAnalytics.anonymize === true;
   const setComponents = googleAnalytics.head ? setHeadComponents : setPostBodyComponents
-  return setComponents([
+  setComponents([
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalytics.trackingId}`}/>,
     <script
       key={`gatsby-plugin-gdpr-tracking`}
@@ -38,4 +43,30 @@ export const onRenderBody = (
       }}
     />,
   ])
+
+  if (hotjar && hotjar.trackingId) {
+    setHeadComponents([
+      <script
+        key={`gatsby-plugin-hotjar`}
+        dangerouslySetInnerHTML={{
+          __html: `
+              var hjLoaded = false;
+              function loadHotjar() {
+                if (!hjLoaded) {
+                  (function(h,o,t,j,a,r){
+                      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                      h._hjSettings={hjid:${hotjar.trackingId},hjsv:${hotjar.snippetVersion || '6'}};
+                      a=o.getElementsByTagName('head')[0];
+                      r=o.createElement('script');r.async=1;
+                      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                      a.appendChild(r);
+                  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=')
+                  hjLoaded = true;
+                }
+             }
+          `,
+        }}
+      />,
+    ])
+  }
 }

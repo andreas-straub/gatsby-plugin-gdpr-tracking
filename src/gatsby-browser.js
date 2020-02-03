@@ -8,68 +8,43 @@ const defaultOptions = {
     anonymize: true
   },
   googleAds: {
-    controlCookieName: 'gdpr-gAds-ctrl',
+    controlCookieName: 'gdpr-marketing-enabled',
     anonymize: true
+  },
+  hotjar: {
+    controlCookieName: 'gdpr-analytics-enabled',
   }
 };
 
-function isEnvironmentValid(environments) {
-  return environments.includes(currentEnvironment);
-}
+export const onClientEntry = (_, {hotjar}) => {
+  const hotjarOpt = {...defaultOptions.hotjar, ...hotjar};
 
-export const onClientEntry = (_, pluginOptions = {}) => {
-  const {
-    environments,
-    googleAnalytics,
-    googleAds
-  } = Object.assign(defaultOptions, pluginOptions);
-
-  // check for the correct environment
-  if (isEnvironmentValid(environments)) {
-    // - google analytics
-
-    // check if the tracking function exists
-    if (typeof window.gtag === `function`) {
-      console.log('Google Analytics - trackingId', googleAnalytics.trackingId);
-      gtag('config', googleAnalytics.trackingId, { 'anonymize_ip': googleAnalytics.anonymize.toString() });
-
-
-      // - Google Ads pixel
-      // check if the marketing cookie exists
-      if (Cookies.get(googleAds.controlCookieName) === "true") {
-        console.log('Google Ads - trackingId', googleAds.trackingId);
-        gtag('config', googleAds.trackingId, { 'anonymize_ip': googleAds.anonymize.toString() });
-      }
-    }
+  if (typeof window.loadHotjar === `function` && Cookies.get(hotjarOpt.controlCookieName) === "true") {
+    loadHotjar();
   }
 };
 
-export const onRouteUpdate = ({ location }, pluginOptions = {}) => {
-  const {
-    environments,
-    googleAnalytics,
-    googleAds
-  } = Object.assign(defaultOptions, pluginOptions);
+export const onRouteUpdate = ({location}, {environments = defaultOptions.environments, googleAnalytics, googleAds}) => {
+  const googleAnalyticsOpt = {...defaultOptions.googleAnalytics, ...googleAnalytics};
+  const googleAdsOpt = {...defaultOptions.googleAds, ...googleAds};
 
   // check for the production environment
-  if (!isEnvironmentValid(environments)) {
+  if (!environments.includes(currentEnvironment)) {
     return null;
   }
 
   if (typeof window.gtag === `function`) {
     // Google Analytics
-    console.log('Google Analytics (onRouteUpdate) - trackingId', googleAnalytics.trackingId);
-    gtag('config', googleAnalytics.trackingId, {
-      'anonymize_ip': googleAnalytics.anonymize.toString(),
+    gtag('config', googleAnalyticsOpt.trackingId, {
+      'anonymize_ip': googleAnalyticsOpt.anonymize.toString(),
       'page_path': location.pathname
     });
 
     // - Google Ads pixel
     // check if the marketing cookie exists
-    if (Cookies.get(googleAds.controlCookieName) === "true") {
-      console.log('Google Ads (onRouteUpdate) - trackingId', googleAds.trackingId);
-      gtag('config', googleAds.trackingId, {
-        'anonymize_ip': googleAds.anonymize.toString(),
+    if (Cookies.get(googleAdsOpt.controlCookieName) === "true" && googleAdsOpt.trackingId) {
+      gtag('config', googleAdsOpt.trackingId, {
+        'anonymize_ip': googleAdsOpt.anonymize.toString(),
         'page_path': location.pathname
       });
     }

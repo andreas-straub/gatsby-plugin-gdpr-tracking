@@ -35,6 +35,15 @@ module.exports = {
           trackingId: "YOUR_GOOGLE_ADS_TRACKING_ID",
           // Setting this parameter is optional
           anonymize: true,
+          // name of the cookie, that enabled the traking if it set to true
+          controlCookieName: "YOUR_GDPR_COOKIE_NAME"
+        },
+        hotjar: {
+          // The Hotjar ID; the tracking code won't be generated without it.
+          trackingId: "YOUR_HOTJAR_ID",
+          snippetVersion: "YOUR_HOTJAR_SNIPPET_VERSION",
+          // name of the cookie, that enabled the traking if it set to true
+          controlCookieName: "YOUR_GDPR_COOKIE_NAME"
         },
         // Defines the environments where the tracking should be available  - default is ["production"]
         environments: ['production', 'development']
