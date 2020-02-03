@@ -17,18 +17,10 @@ module.exports = {
         googleAnalytics: { 
             // The property ID; the tracking code won't be generated without it.
             trackingId: "YOUR_GOOGLE_ANALYTICS_TRACKING_ID",
-            // Optional parameter (default false) - Enable analytics in development mode.
-            enableDevelopment: true, // default false
             // Defines where to place the tracking script - `true` in the head and `false` in the body
             head: true,
             // Setting this parameter is optional
             anonymize: true,
-            // Setting this parameter is also optional
-            respectDNT: false,
-            // Delays sending pageview hits on route update (in milliseconds)
-            pageTransitionDelay: 0,
-            // Optional parameter (default false) - Starts google analytics with cookies enabled. In some countries (such as Germany) this is not allowed.
-            autoStartWithCookiesEnabled: false,
         },
         googleAds: {
           // The property ID; the tracking code won't be generated without it.
@@ -52,52 +44,77 @@ module.exports = {
   ],
 }
 ```
-Note that this plugin is disabled while running `gatsby develop`. This way, actions are not tracked while you are still developing your project. Once you run `gatsby build` the plugin is enabled. Test it with `gatsby serve`.
-You can use this plugin in development mode, if you set the plugin option `enableDevelopment`.
 
 ## How it works
-By default this plugin starts google analytics without cookies and with a generated clientId to make it GDPR compliant. Google Analytics will be started on `onClientEntry`.
-As soon as the user accepts your cookie policy, you can set the cookie `gatsby-plugin-gdpr-tracking_cookies-enabled`.
-Depending on the user input the value should be `true` or `false`. 
-If the cookie is set to true, Google Analytics will be restarted with enabled cookies. 
-If the cookie is set to false, Google Analytics will continue without cookies.
-If the user withdraws the choice, set the cookie to false and Google Analytics will be restarted in the correct mode.
+This plugin uses the new Google Analytics API that is working with Google Tag manager (`gtas.js`)
 
-The page view will be tracked on `onRouteUpdate`.
+Here you can find the Google Docs: https://developers.google.com/analytics/devguides/collection/gtagjs
+
+First of all the plugin checks in which environment your site is running. If it's currently running in one of your defined
+environments it will add the Google Analytics, Google Ads and Hotjar Pixel javascript by default to the `<head>` of your site.
+It will not be activated or initialized by this.
+
+The Google Analytics set the cookie and tracks the website, since it a necessary functionality to be able to host the website properly.
+
+By default this plugin will not send any data to Google Ads or to Hotjar to make it GDPR compliant.
+The user first needs to accept your cookie policy. By accepting that you need to set cookies that you can configure
+in the options - `googleAds.controlCookieName` and `hotjar.controlCookieName`.
+Depending on the user input the value of each of the cookies should be `true` or `false`.
+
+If the `hotjar.controlCookieName` cookie is set to true, Hotjar will be initialized `onClientEntry`.
+
+The page view will then be tracked on `onRouteUpdate`.
+
+__Important:__ Please keep in mind to set the cookies. Otherwise the tracking won't work! Tracking won't happen at all
+if there are no cookies or they are set so false.
 
 ## Options
 
-### `trackingId`
+### Google Analytics
+
+#### `trackingId`
 
 Here you place your Google Analytics tracking id.
 
-### `adsTrackingId`
+### `head`
 
-Here you place your Google Analytics tracking id.
+Should the script be added to the `<head/>` element or not.
 
-## Optional Fields
-
-### `enableDevelopment`
-
-Enable analytics in development mode.
-
-### `anonymizeIP`
+#### `anonymize`
 
 Some countries (such as Germany) require you to use the
-[\_anonymizeIP](https://support.google.com/analytics/answer/2763052) function for
-Google Analytics. Otherwise you are not allowed to use it. 
+[\_anonymizeIP](https://support.google.com/analytics/answer/2763052) function for Google Analytics. Otherwise you are not allowed to use it. The option adds two blocks to the code:
 
-### `autoStartWithCookiesEnabled`
+```javascript
+gtag(
+  'config', googleAnalyticsOpt.trackingId, {
+  'anonymize_ip': googleAnalyticsOpt.anonymize.toString(),
+  'page_path': location.pathname
+});
+```
 
-Starts google analytics with cookies enabled. In some countries (such as Germany) this is not allowed.
+If your visitors should be able to set an Opt-Out-Cookie (No future tracking)
+you can set a link e.g. in your imprint as follows:
+
+`<a href="javascript:gaOptout();">Deactivate Google Analytics</a>`
+
+### Google Ads Pixel
+
+#### `trackingId`
+
+Here you place your Google Analytics tracking id.
+
+#### `anonymize`
+Some countries (such as Germany) require you to use the
+[\_anonymizeIP](https://support.google.com/analytics/answer/2763052) function for Google Analytics. Otherwise you are not allowed to use it. The option adds two blocks to the code:
 
 
-The plugin overwrites some `gaOptions` to ensure other options like disabled cookies.
+### Hotjar
 
-## Troubleshooting
+#### `trackingId`
 
-### No actions are tracked
+Your Hotjar ID
 
-#### Check the tracking ID
+#### `snippetVersion`
 
-Make sure you supplied the correct Google Analytics tracking ID. It should look like this: `trackingId: "UA-111111111-1"`
+Your Hotjar snippet version or 6 by default
