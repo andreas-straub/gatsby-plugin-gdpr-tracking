@@ -14,11 +14,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-gdpr-tracking`,
       options: {
+        // logging to the console, if debug is true
+        debug: false, 
         googleAnalytics: { 
             // The property ID; the tracking code won't be generated without it.
             trackingId: "YOUR_GOOGLE_ANALYTICS_TRACKING_ID",
-            // Defines where to place the tracking script - `true` in the head and `false` in the body
-            head: true,
+            // Defines it google analytics should be started with out the cookie consent
+            autoStart: false,
             // Setting this parameter is optional
             anonymize: true,
         },
@@ -76,14 +78,24 @@ if there are no cookies or they are set so false.
 
 Here you place your Google Analytics tracking id.
 
-### `head`
+#### `autoStart`
 
-Should the script be added to the `<head/>` element or not.
+Should the tracking starts immediately without consent or not. Default is `true`. You can set it to `false` to let it 
+be controlled via cookie with the name defined in `controlCookieName` option  
+
+#### `controlCookieName`
+
+Name of the control cookie. Needed if `autoStart` sets to `false`. If the value of this cookie it set to `true`, then 
+tracking is activated
 
 #### `anonymize`
 
 Some countries (such as Germany) require you to use the
 [\_anonymizeIP](https://support.google.com/analytics/answer/2763052) function for Google Analytics. Otherwise you are not allowed to use it. The option adds two blocks to the code:
+
+#### `debug`
+
+Logging to the console to check the tracking on your Gatsby Project. Default is `false`.
 
 ```javascript
 gtag(
@@ -108,6 +120,9 @@ Here you place your Google Analytics tracking id.
 Some countries (such as Germany) require you to use the
 [\_anonymizeIP](https://support.google.com/analytics/answer/2763052) function for Google Analytics. Otherwise you are not allowed to use it. The option adds two blocks to the code:
 
+#### `controlCookieName`
+
+Name of the control cookie. If the value of this cookie it set to `true`, then tracking is activated
 
 ### Hotjar
 
@@ -118,3 +133,7 @@ Your Hotjar ID
 #### `snippetVersion`
 
 Your Hotjar snippet version or 6 by default
+
+#### `controlCookieName`
+
+Name of the control cookie. If the value of this cookie it set to `true`, then tracking is activated
