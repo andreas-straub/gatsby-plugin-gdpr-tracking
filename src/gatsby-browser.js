@@ -38,7 +38,7 @@ export const onClientEntry = (_, {environments = defaultOptions.environments, ho
     if (debug) {
       console.log(`onClientEntry - Cookies.get('${hotjarOpt.controlCookieName}') is true ==> start hotjar tracking`);
     }
-    trackHotjar();
+    window.trackHotjar();
   }
 
   if (typeof window.gtag === `function`) {
