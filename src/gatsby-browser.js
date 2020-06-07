@@ -8,11 +8,13 @@ const defaultOptions = {
   googleAnalytics: {
     anonymize: true,
     controlCookieName: 'gdpr-analytics-enabled',
-    autoStart: true
+    autoStart: true,
+    cookieFlags: 'secure;samesite=none'
   },
   googleAds: {
     controlCookieName: 'gdpr-marketing-enabled',
-    anonymize: true
+    anonymize: true,
+    cookieFlags: 'secure;samesite=none'
   },
   hotjar: {
     controlCookieName: 'gdpr-analytics-enabled',
@@ -97,7 +99,8 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
       }
       gtag('config', googleAnalyticsOpt.trackingId, {
         'anonymize_ip': googleAnalyticsOpt.anonymize.toString(),
-        'page_path': location.pathname
+        'page_path': location.pathname,
+        'cookie_flags': googleAnalyticsOpt.cookieFlags
       });
     } else {
       if (debug) {
@@ -126,7 +129,8 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
     if (Cookies.get(googleAdsOpt.controlCookieName) === "true" && googleAdsOpt.trackingId) {
       gtag('config', googleAdsOpt.trackingId, {
         'anonymize_ip': googleAdsOpt.anonymize.toString(),
-        'page_path': location.pathname
+        'page_path': location.pathname,
+        'cookie_flags': googleAdsOpt.cookieFlags
       });
     }
   };

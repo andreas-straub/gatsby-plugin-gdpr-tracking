@@ -20,11 +20,12 @@ module.exports = {
             // The property ID; the tracking code won't be generated without it.
             trackingId: 'YOUR_GOOGLE_ANALYTICS_TRACKING_ID',
             // Defines it google analytics should be started with out the cookie consent
-            autoStart: false, // <--- default
+            autoStart: true, // <--- default
             // Setting this parameter is optional
             anonymize: true, // <--- default
             // Name of the cookie, that enables the tracking if it is true
-            controlCookieName: 'gdpr-analytics-enabled' // <--- default
+            controlCookieName: 'gdpr-analytics-enabled', // <--- default
+            cookieFlags: 'secure;samesite=none' // <--- default
         },
         googleAds: {
           // The property ID; the tracking code won't be generated without it.
@@ -32,7 +33,8 @@ module.exports = {
           // Setting this parameter is optional
           anonymize: true, // <--- default
           // Name of the cookie, that enables the tracking if it is true
-          controlCookieName: 'gdpr-marketing-enabled'  // <--- default
+          controlCookieName: 'gdpr-marketing-enabled', // <--- default
+          cookieFlags: 'secure;samesite=none' // <--- default
         },
         hotjar: {
           // The Hotjar ID; the tracking code won't be generated without it.
@@ -169,6 +171,18 @@ Some countries (such as Germany) require you to use the
 #### `controlCookieName`
 
 Name of the control cookie. If the value of this cookie it set to `true`, then tracking is activated
+
+#### `cookieFlags`
+
+The new `cookieFlags` field allows you to set any cookie directive when the Google Analytics cookie is created.
+
+The value of this setting is a semi-colon separated list of lowercase cookie directives and their respective values. For example, this is a possible value of cookieFlags:
+
+`max-age=7200;domain=simoahava.com;path=/;secure;samesite=none`
+
+The default value is: `secure;samesite=none`
+
+See more details here: https://www.simoahava.com/analytics/cookieflags-field-google-analytics/
 
 ### Hotjar `hotjar` configuration object:
 
