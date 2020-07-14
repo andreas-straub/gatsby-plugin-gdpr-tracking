@@ -98,11 +98,11 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
       if (debug) {
         console.log(`onRouteUpdate - inside trackGoogleAnalytics - track page view for path: `, location.pathname);
       }
-      setTimeout(gtag('config', googleAnalyticsOpt.trackingId, {
+      gtag('config', googleAnalyticsOpt.trackingId, {
         'anonymize_ip': googleAnalyticsOpt.anonymize.toString(),
         'page_path': location.pathname,
         'cookie_flags': googleAnalyticsOpt.cookieFlags
-      }), 50);
+      });
     } else {
       if (debug) {
         console.log(`onRouteUpdate - inside trackGoogleAnalytics function - tracking is disabled!!`);
