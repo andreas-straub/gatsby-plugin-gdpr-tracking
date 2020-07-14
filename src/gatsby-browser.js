@@ -1,5 +1,6 @@
 import Cookies from "js-cookie"
 
+const timeoutLength = 32; //https://github.com/gatsbyjs/gatsby/commit/42f509eadb06753f7b529f3682f22e012c21dc9b#diff-bf0d94c8bf47d5c1687e342c2dba1e00R31
 const currentEnvironment = process.env.ENV || process.env.NODE_ENV || "development";
 
 const defaultOptions = {
@@ -97,11 +98,11 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
       if (debug) {
         console.log(`onRouteUpdate - inside trackGoogleAnalytics - track page view for path: `, location.pathname);
       }
-      gtag('config', googleAnalyticsOpt.trackingId, {
+      setTimeout(gtag('config', googleAnalyticsOpt.trackingId, {
         'anonymize_ip': googleAnalyticsOpt.anonymize.toString(),
         'page_path': location.pathname,
         'cookie_flags': googleAnalyticsOpt.cookieFlags
-      });
+      }), 50);
     } else {
       if (debug) {
         console.log(`onRouteUpdate - inside trackGoogleAnalytics function - tracking is disabled!!`);
@@ -145,7 +146,9 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
   if (debug) {
     console.log(`onRouteUpdate - call tracking functions`);
   }
-  window.trackGoogleAnalytics();
-  window.trackGoogleAds();
-
+  //setTimeout workaround to try to ensure the page title loads
+  setTimeout(() => {
+    window.trackGoogleAnalytics();
+    window.trackGoogleAds();
+  }, timeoutLength);
 };
