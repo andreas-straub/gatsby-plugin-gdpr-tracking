@@ -1,5 +1,6 @@
 import Cookies from "js-cookie"
 
+const timeoutLength = 32; //https://github.com/gatsbyjs/gatsby/commit/42f509eadb06753f7b529f3682f22e012c21dc9b#diff-bf0d94c8bf47d5c1687e342c2dba1e00R31
 const currentEnvironment = process.env.ENV || process.env.NODE_ENV || "development";
 
 const defaultOptions = {
@@ -145,7 +146,9 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
   if (debug) {
     console.log(`onRouteUpdate - call tracking functions`);
   }
-  window.trackGoogleAnalytics();
-  window.trackGoogleAds();
-
+  //setTimeout workaround to try to ensure the page title loads
+  setTimeout(() => {
+    window.trackGoogleAnalytics();
+    window.trackGoogleAds();
+  }, timeoutLength);
 };
