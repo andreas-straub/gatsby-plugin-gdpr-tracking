@@ -69,7 +69,7 @@ export const onRenderBody = (
     ])
   }
 
-  if (facebookPixel && facebookPixel.trackingId) {
+  if (facebookPixel && facebookPixel.pixelId) {
     setHeadComponents([
       <script
         key="gatsby-plugin-gdpr-cookies-facebook-pixel"
