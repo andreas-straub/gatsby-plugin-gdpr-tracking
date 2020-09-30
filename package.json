@@ -1,7 +1,7 @@
 {
   "name": "gatsby-plugin-gdpr-tracking",
   "description": "Gatsby Plugin to add analytics and tracking services: Google Analytics, Google Ads and Hotjar in a gdpr form.",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "author": "Andreas Straub",
   "bugs": {
     "url": "https://github.com/andreas-straub/gatsby-plugin-gdpr-tracking/issues"
