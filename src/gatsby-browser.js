@@ -17,12 +17,16 @@ const defaultOptions = {
     anonymize: true,
     cookieFlags: 'secure;samesite=none'
   },
+  facebookPixel: {
+    controlCookieName: 'gdpr-marketing-enabled',
+    cookieFlags: 'secure;samesite=none'
+  },
   hotjar: {
     controlCookieName: 'gdpr-analytics-enabled',
   }
 };
 
-export const onClientEntry = (_, {environments = defaultOptions.environments, hotjar, debug}) => {
+export const onClientEntry = (_, {environments = defaultOptions.environments, hotjar, facebookPixel, debug}) => {
   if (debug) {
     console.log("onClientEntry - currentEnvironment:", currentEnvironment);
   }
@@ -35,6 +39,7 @@ export const onClientEntry = (_, {environments = defaultOptions.environments, ho
     return null;
   }
 
+  const fbPixelOpt = {...defaultOptions.facebookPixel, ...facebookPixel};
   const hotjarOpt = {...defaultOptions.hotjar, ...hotjar};
 
   if (typeof window.trackHotjar === `function` && Cookies.get(hotjarOpt.controlCookieName) === "true") {
@@ -51,9 +56,16 @@ export const onClientEntry = (_, {environments = defaultOptions.environments, ho
       console.log(`onClientEntry - gtag function is defined. gaLoaded=${gaLoaded}`);
     }
   }
+
+  if (typeof window.fbq === `function` && Cookies.get(fbPixelOpt.controlCookieName) === "true") {
+    if (debug) {
+      console.log(`onClientEntry - Cookies.get('${fbPixelOpt.controlCookieName}') is true ==> start fbpixel`);
+    }
+    window.fbq(`init`, facebookPixel.pixelId);
+  }
 };
 
-export const onRouteUpdate = ({location}, {environments = defaultOptions.environments, googleAnalytics, googleAds, debug}) => {
+export const onRouteUpdate = ({location}, {environments = defaultOptions.environments, googleAnalytics, googleAds, facebookPixel, debug}) => {
   if (debug) {
     console.log("onRouteUpdate - currentEnvironment:", currentEnvironment);
   }
@@ -66,6 +78,7 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
     return null;
   }
 
+  const facebookPixelOpt = {...defaultOptions.facebookPixel, ...facebookPixel};
   const googleAnalyticsOpt = {...defaultOptions.googleAnalytics, ...googleAnalytics};
   const googleAdsOpt = {...defaultOptions.googleAds, ...googleAds};
 
@@ -142,6 +155,12 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
     }
   };
 
+  // facebook pixel
+  window.fbPixel = () => {
+    if (Cookies.get(facebookPixelOpt.controlCookieName) === "true" && typeof window.fbq === `function` && facebookPixelOpt.pixelId) {
+      window.fbq(`track`, `PageView`);
+    }
+  }
 
   if (debug) {
     console.log(`onRouteUpdate - call tracking functions`);
@@ -150,5 +169,6 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
   setTimeout(() => {
     window.trackGoogleAnalytics();
     window.trackGoogleAds();
+    window.fbPixel();
   }, timeoutLength);
 };

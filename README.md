@@ -36,6 +36,13 @@ module.exports = {
           controlCookieName: 'gdpr-marketing-enabled', // <--- default
           cookieFlags: 'secure;samesite=none' // <--- default
         },
+        facebookPixel: {
+          // The property ID; the tracking code won't be generated without it.
+          pixelId: 'YOUR_FACEBOOK_PIXEL_TRACKING_ID',
+          // Name of the cookie, that enables the tracking if it is true
+          controlCookieName: 'gdpr-marketing-enabled', // <--- default
+          cookieFlags: 'secure;samesite=none' // <--- default
+        },
         hotjar: {
           // The Hotjar ID; the tracking code won't be generated without it.
           trackingId: 'YOUR_HOTJAR_ID',
