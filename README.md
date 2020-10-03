@@ -41,7 +41,6 @@ module.exports = {
           pixelId: 'YOUR_FACEBOOK_PIXEL_TRACKING_ID',
           // Name of the cookie, that enables the tracking if it is true
           controlCookieName: 'gdpr-marketing-enabled', // <--- default
-          cookieFlags: 'secure;samesite=none' // <--- default
         },
         hotjar: {
           // The Hotjar ID; the tracking code won't be generated without it.
@@ -129,6 +128,29 @@ The tracking of Google Ads is very similar to Google Analytics. Basically they d
 
 `window.trackGoogleAdsEvent(category, params)` - sends an event to Google Ads Analytics, depending on the current value of the control cookie
 
+#### Facebook Pixel
+The user first needs to accept your cookie policy. By accepting that, you need to set the cookie, that you can configure
+in the option: `facebookPixel.controlCookieName`. Depending on the user input the value of the cookies should be `true` or `false`.
+Usually you have to reload the page after changing the control cookie value. But with this plugin you can simple call the 
+function `window.trackFbPixel()` to start the tracking. You page view will be tracked without reloading the page.
+This function still check the value of the control cookie. So you have to set it to true first and then call the function 
+after the user has confirmed the consent.
+
+#### JavaScrip API of Facebook Pixel
+
+This plugin loads the `https://connect.facebook.net/en_US/fbevents.js` library 
+and sends a PageView hit to Facebook.
+
+This is the code of `onRouteUpdate` method created by this plugin
+```javascript
+  fbq('track', 'PageView');
+```
+
+**Helper functions, that you can use in your code:**
+
+`window.trackFbPixel()` - sends a pageview hit to Facebook, depending on the current value of the control cookie
+
+
 
 ### Important:
 Please keep in mind setting the cookies. Otherwise, the tracking won't work! Tracking won't happen at all
@@ -200,6 +222,16 @@ Your Hotjar ID
 #### `snippetVersion`
 
 Your Hotjar snippet version or 6 by default
+
+#### `controlCookieName`
+
+Name of the control cookie. If the value of this cookie it set to `true`, then tracking is activated
+
+### Facebook Pixel `facebookPixel` configuration object:
+
+#### `pixelId`
+
+Your Facebook Pixel ID
 
 #### `controlCookieName`
 

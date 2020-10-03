@@ -26,6 +26,16 @@ const defaultOptions = {
   }
 };
 
+function initFb(window, facebookPixelOpt, debug) {
+  if (typeof window.fbq === `function` && Cookies.get(facebookPixelOpt.controlCookieName) === "true" && window.fbqInitialized !== true ) {
+    if (debug) {
+      console.log(`onClientEntry - Cookies.get('${facebookPixelOpt.controlCookieName}') is true ==> start fbpixel`);
+    }
+    window.fbq('init', facebookPixelOpt.pixelId);
+    window.fbqInitialized = true;
+  }
+}
+
 export const onClientEntry = (_, {environments = defaultOptions.environments, hotjar, facebookPixel, debug}) => {
   if (debug) {
     console.log("onClientEntry - currentEnvironment:", currentEnvironment);
@@ -39,7 +49,7 @@ export const onClientEntry = (_, {environments = defaultOptions.environments, ho
     return null;
   }
 
-  const fbPixelOpt = {...defaultOptions.facebookPixel, ...facebookPixel};
+  const facebookPixelOpt = {...defaultOptions.facebookPixel, ...facebookPixel};
   const hotjarOpt = {...defaultOptions.hotjar, ...hotjar};
 
   if (typeof window.trackHotjar === `function` && Cookies.get(hotjarOpt.controlCookieName) === "true") {
@@ -57,12 +67,7 @@ export const onClientEntry = (_, {environments = defaultOptions.environments, ho
     }
   }
 
-  if (typeof window.fbq === `function` && Cookies.get(fbPixelOpt.controlCookieName) === "true") {
-    if (debug) {
-      console.log(`onClientEntry - Cookies.get('${fbPixelOpt.controlCookieName}') is true ==> start fbpixel`);
-    }
-    window.fbq(`init`, facebookPixel.pixelId);
-  }
+  initFb(window, facebookPixelOpt, debug);
 };
 
 export const onRouteUpdate = ({location}, {environments = defaultOptions.environments, googleAnalytics, googleAds, facebookPixel, debug}) => {
@@ -156,9 +161,10 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
   };
 
   // facebook pixel
-  window.fbPixel = () => {
+  window.trackFbPixel = () => {
     if (Cookies.get(facebookPixelOpt.controlCookieName) === "true" && typeof window.fbq === `function` && facebookPixelOpt.pixelId) {
-      window.fbq(`track`, `PageView`);
+      initFb(window, facebookPixelOpt, debug);
+      window.fbq('track', 'PageView');
     }
   }
 
@@ -169,6 +175,6 @@ export const onRouteUpdate = ({location}, {environments = defaultOptions.environ
   setTimeout(() => {
     window.trackGoogleAnalytics();
     window.trackGoogleAds();
-    window.fbPixel();
+    window.trackFbPixel();
   }, timeoutLength);
 };
